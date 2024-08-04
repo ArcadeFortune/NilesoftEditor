@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>
+    Welcome to NilesoftEditor
+  </h1>
+  <h6>developed by ArcadeFortune</h6>
+
+  <form action="/test" method="post" enctype="application/json">
+    <input type="number" name="position">
+    <input type="text" name="section">
+    <input type="text" name="title">
+    <input type="text" name="imagePath">
+    <input type="text" name="cmd">
+    <select name="sep">
+      <option value="both">Above and Below</option>
+      <option value="top">Above</option>
+      <option value="bottom">Below</option>
+    </select>
+    <input type="submit" value="Upload">
+  </form>
+
+
+
+  <button onclick="apply()">testapply</button>
+  <script>
+    function apply() {
+      fetch('/apply')
+    }
+  </script>
+</body>
+</html>
