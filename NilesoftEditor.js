@@ -281,18 +281,18 @@ const server = http.createServer(async (req, res) => {
   res.end(fs.readFileSync('index.html'));
 });
 
-// server.listen(port, () => {
-//   console.log(`Server running at http://localhost:${port}/`);
-// });
+server.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
 
 
-// Read the file content
-const data = fs.readFileSync(path, 'utf8');
+// // Read the file content
+// const data = fs.readFileSync(path, 'utf8');
 
-// Split the file content into lines
-const lines = data.split('\n');
+// // Split the file content into lines
+// const lines = data.split('\n');
 
-const result = processLines(lines);
+// const result = processLines(lines);
 
-console.log(JSON.stringify(result, null, 2));
+// console.log(JSON.stringify(result, null, 2));
 
