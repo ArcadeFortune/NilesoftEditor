@@ -34,46 +34,35 @@
   <button onclick="getTaskbar()">Get Taskbar</button>
   <br/>
   <div class="context-menu">
-    <div class="root">
-      <div class="element menu">
+    <div class="element">
+      <div class="menu">
         Nilesoft (clickable (not really))
       </div>
-      <!-- <div class="element item">
-        config
-      </div>
-      <div class="element item">
-        manager
-      </div>
-      <div class="element item">
-        directory
-      </div>
-      <div class="element item">
-        v1
-      </div>
-      <div class="element item">
-        docs
-      </div>
-      <div class="element item">
-        donate
-      </div> -->
     </div>
-    <div class="root">
-      <div class="element menu">
+    <div class="element">
+      <div class="menu">
         Apps (clickable (not really))
       </div>
-      <div class="element menu">
+    </div>
+    <div class="element">
+      <div class="menu">
         Riot Games (clickable (not really))
       </div>
-      <div class="element item">
-        settings
+    </div>
+    <div class="element">
+      <div class="item">
+        Settings
       </div>
-      <div class="element item">
-        task manager
+    </div>
+    <div class="element">
+      <div class="item">
+        Task Manager
       </div>
-      <div class="element item">
-        restart explorer
+    </div>
+    <div class="element">
+      <div class="item">
+        Exit Explorer
       </div>
-
     </div>
   </div>
   <script>
@@ -84,15 +73,51 @@
       fetch('/taskbar')
       .then(res => res.json())
       .then(data => {
+        const root = document.createElement('div')
+        root.className = 'context-menu';
+
         data.forEach(element => {
           if (element['menu']) {
-            console.log('parent menu:');
-            element['menu'].forEach(item => {
-              console.log(item);
-            });
+            const currentMenu = element['menu'];
+            //check if it is expanded
+            if (currentMenu.expanded) {
+              root.append(getChildren(currentMenu.children));
+            } else {
+              console.log('found folder:');
+              const parent = document.createElement('div');
+              parent.className = 'element';
+              const child = document.createElement('div');
+              child.className = 'menu';
+              child.innerText = currentMenu.title;
+              parent.appendChild(child);
+              root.appendChild(parent);
+            }
           }
         })
+        document.body.appendChild(root);
       })
+    }
+
+    function getChildren(array) {
+      const fragment = document.createDocumentFragment();
+
+      array.forEach(element => {
+        const div = document.createElement('div');
+        div.className = 'element';
+
+        const child = document.createElement('div');
+        if (element['menu']) {
+          child.className = 'menu';
+          child.innerText = element['menu'].title;
+        } else {
+          child.className = 'item';
+          child.innerText = element['item'].title;
+        }
+        div.appendChild(child);
+        fragment.appendChild(div);
+        console.log(element);
+      })
+      return fragment;
     }
   </script>
 </body>

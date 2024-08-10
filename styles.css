@@ -2,10 +2,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.root {
-  position: relative;
-}
-
 .context-menu {
   border: 1px solid #8080804f;
   border-radius: 8px;
@@ -13,19 +9,28 @@ body {
 
   padding: 0.3em;
   display: inline-block;
+  user-select: none;
+  position: relative;
 }
 
 .element {  
-  margin-left: 2.3em;
-  margin-block: 0.5em;
+  padding-left: 2.3em;
+  padding-block: 0.3em;
   padding-right: 2em;
+
+  border-radius: 6px;
 }
 
-.element.menu::after {
-  content: " >";
-  float: right;
+.element:hover {
+  background-color: #f0f0f0;
+}
+
+.menu::after {
   position: absolute;
-  right: 0.3em;
-  transform: scaleX(0.8) scaleY(1.6);
-  line-height: 1.2em;
+  float: right;
+  right: 0.7em;
+  
+  content: ">";
+  line-height: 1.3em;
+  transform: scaleX(0.8) scaleY(1.4);
 }

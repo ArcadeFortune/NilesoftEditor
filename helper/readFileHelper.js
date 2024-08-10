@@ -19,7 +19,7 @@ function convertRowToJson(rowString='') {
     type = 'menu';
   }
 
-  result[type] = [];
+  result[type] = {};
   content = temp[1];
   let fragmented;
   fragmented = content.split('=');
@@ -39,7 +39,7 @@ function convertRowToJson(rowString='') {
     //save a result
     const obj = {};
     obj[prevSecondPart] = firstPart;
-    result[type].push(obj);
+    Object.assign(result[type], obj);
   }
   return result;
 }
@@ -58,16 +58,14 @@ function processLines(lines=[]) {
           let line = lines[i].trim();
           if (line === '{') {
               i++;
-              block[block.length - 1].menu.push({children: parseBlock()})
-              // block[block.length - 1].children = parseBlock(); //less nested
+              Object.assign(block[block.length - 1].menu, {children: parseBlock()})
           } else if (line === '}') {
               i++;
               return block; 
           } else {
               const obj = convertRowToJson(line);
-              if (obj.item) obj.item.push({index: i});
-              else obj.menu.push({index: i});
-              // obj.push({index: i})
+              if (obj.item) Object.assign(obj.item, {index: i});
+              else Object.assign(obj.menu, {index: i});
               block.push(obj);
               i++;
           }
