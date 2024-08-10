@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <h1>
@@ -11,12 +12,12 @@
   </h1>
   <h6>developed by ArcadeFortune</h6>
 
-  <form action="/test" method="post" enctype="application/json">
-    <input type="number" name="position">
-    <input type="text" name="section">
-    <input type="text" name="title">
+  <form action="/taskbar" method="post" enctype="application/json">
+    <input type="number" name="position" value="23">
+    <input type="text" name="section" value="item">
+    <input type="text" name="title" value="test">
     <input type="text" name="imagePath">
-    <input type="text" name="cmd">
+    <input type="text" name="cmd" value="rito.bat">
     <select name="sep">
       <option value="both">Above and Below</option>
       <option value="top">Above</option>
@@ -26,11 +27,72 @@
   </form>
 
 
-
   <button onclick="apply()">testapply</button>
+
+
+  <br/>
+  <button onclick="getTaskbar()">Get Taskbar</button>
+  <br/>
+  <div class="context-menu">
+    <div class="root">
+      <div class="element menu">
+        Nilesoft (clickable (not really))
+      </div>
+      <!-- <div class="element item">
+        config
+      </div>
+      <div class="element item">
+        manager
+      </div>
+      <div class="element item">
+        directory
+      </div>
+      <div class="element item">
+        v1
+      </div>
+      <div class="element item">
+        docs
+      </div>
+      <div class="element item">
+        donate
+      </div> -->
+    </div>
+    <div class="root">
+      <div class="element menu">
+        Apps (clickable (not really))
+      </div>
+      <div class="element menu">
+        Riot Games (clickable (not really))
+      </div>
+      <div class="element item">
+        settings
+      </div>
+      <div class="element item">
+        task manager
+      </div>
+      <div class="element item">
+        restart explorer
+      </div>
+
+    </div>
+  </div>
   <script>
     function apply() {
       fetch('/apply')
+    }
+    function getTaskbar() {
+      fetch('/taskbar')
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(element => {
+          if (element['menu']) {
+            console.log('parent menu:');
+            element['menu'].forEach(item => {
+              console.log(item);
+            });
+          }
+        })
+      })
     }
   </script>
 </body>

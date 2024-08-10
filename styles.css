@@ -1,0 +1,31 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.root {
+  position: relative;
+}
+
+.context-menu {
+  border: 1px solid #8080804f;
+  border-radius: 8px;
+  box-shadow: 1px 1px 7px -3px #808080ba;
+
+  padding: 0.3em;
+  display: inline-block;
+}
+
+.element {  
+  margin-left: 2.3em;
+  margin-block: 0.5em;
+  padding-right: 2em;
+}
+
+.element.menu::after {
+  content: " >";
+  float: right;
+  position: absolute;
+  right: 0.3em;
+  transform: scaleX(0.8) scaleY(1.6);
+  line-height: 1.2em;
+}
