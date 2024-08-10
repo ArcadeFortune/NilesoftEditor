@@ -38,7 +38,7 @@ function convertRowToJson(rowString='') {
 
     //save a result
     const obj = {};
-    obj[prevSecondPart] = firstPart;
+    obj[prevSecondPart] = firstPart.replace(/['"]/g, '');
     Object.assign(result[type], obj);
   }
   return result;
