@@ -119,10 +119,10 @@
           //preping for nested menus
           const newMenu = generateContextMenuDiv(element['menu'].children, depth + 1);
           div.onclick = (event) => {
+            const offset = calculateElementsOffset(event.target);
             removeContextMenus(depth);
-            appendContextMenu(newMenu, depth);
-            console.log(depth);
-          }
+            appendContextMenu(newMenu, depth, offset);
+            }
         } else {
           child.className = 'item';
           child.innerText = element['item'].title;
@@ -139,7 +139,8 @@
       div.append(getChildren(array, depth));
       return div;
     }
-    function appendContextMenu(menu, depth) {
+    function appendContextMenu(menu, depth, offset) {
+      menu.style.top = offset + 'px';
       document.querySelector('#main').appendChild(menu);
       menusToDelete[depth] = menu;
     }
@@ -153,6 +154,18 @@
           break;
         }
       }
+    }
+    function calculateElementsOffset(element) {
+      //go to div of class element
+      var div = element;
+      if (div.className !== 'element') div = div.parentElement;
+
+      const rawOffset = div.offsetTop;
+      //in case of margin
+      const containerOffset = div.parentElement.offsetTop;
+
+      const offset = rawOffset + containerOffset - 5; //5 is hardcoded
+      return offset;
     }
     document.body.onclick = () => {
       if (event.target === document.body) removeContextMenus(0);

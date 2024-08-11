@@ -2,7 +2,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   width: 95vw;
   height: 95vh;
-  z-index: -200;
 }
 
 *:not(body) {
@@ -12,6 +11,7 @@ body {
 #main {
   display: flex;
   align-items: flex-start;
+  position: relative;
 }
 
 .context-menu {
