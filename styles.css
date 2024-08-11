@@ -4,8 +4,11 @@ body {
   height: 95vh;
 }
 
-*:not(body) {
-  z-index: 1;
+hr {
+  width: 103.2%;
+  margin-inline: -0.3em;
+  margin-block: 0.2em;
+  border-color: #e8e8e870;
 }
 
 #main {

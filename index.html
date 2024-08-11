@@ -59,6 +59,7 @@
         Task Manager
       </div>
     </div>
+    <hr />
     <div class="element">
       <div class="item">
         Exit Explorer
@@ -112,20 +113,28 @@
 
         const child = document.createElement('div');
 
-        if (element['menu']) {
-          child.className = 'menu';
-          child.innerText = element['menu'].title;
+        //check if it is an item or a menu
+        var type = '';
+        if (element['item']) type = 'item';
+        else if (element['menu']) type = 'menu';
 
+        child.className = type;
+        child.innerText = element[type].title;
+
+        //menu only
+        if (element['menu']) {
           //preping for nested menus
           const newMenu = generateContextMenuDiv(element['menu'].children, depth + 1);
           div.onclick = (event) => {
             const offset = calculateElementsOffset(event.target);
             removeContextMenus(depth);
             appendContextMenu(newMenu, depth, offset);
-            }
-        } else {
-          child.className = 'item';
-          child.innerText = element['item'].title;
+          }
+        }
+        //seperator logic
+        if (element[type].sep) {
+          const sep = document.createElement('hr');
+          fragment.appendChild(sep);
         }
         div.appendChild(child);
         fragment.appendChild(div);
