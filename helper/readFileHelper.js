@@ -64,8 +64,7 @@ function processLines(lines=[]) {
               return block; 
           } else {
               const obj = convertRowToJson(line);
-              if (obj.item) Object.assign(obj.item, {index: i});
-              else Object.assign(obj.menu, {index: i});
+              obj.index = i
               block.push(obj);
               i++;
           }

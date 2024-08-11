@@ -49,3 +49,32 @@ hr {
   line-height: 1.3em;
   transform: scaleX(0.8) scaleY(1.4);
 }
+
+.hover-div {
+  height: 2px;
+  background-color: lime;
+  position: relative;
+}
+.hover-div::after{
+  content: "+";
+  position: absolute;
+  left: 50%;
+  top: -50%;
+  height: 1.3em;
+  width: 2.1em;
+  text-align: center;
+  line-height: 1em;
+  transform: translate(-50%, -40%);
+  background-color: lime;
+  box-shadow: 1px 1px 7px -1px #808080;
+  border-radius: 5px;
+  will-change: box-shadow;
+}
+.hover-div:hover::after {
+  cursor: pointer;
+  background-color: rgb(126, 255, 126);
+  box-shadow: 0px 0px 7px 1px #00a30b;
+}
+.hover-div:hover {
+  cursor: pointer;
+}

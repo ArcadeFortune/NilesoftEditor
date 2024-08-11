@@ -10,9 +10,7 @@
   <h1>
     Welcome to NilesoftEditor
   </h1>
-  <h6>developed by ArcadeFortune</h6>
-
-  <form action="/taskbar" method="post" enctype="application/json">
+  <h4>by ArcadeFortune</h4>  <form action="/taskbar" method="post" enctype="application/json">
     <input type="number" name="position" value="23">
     <input type="text" name="section" value="item">
     <input type="text" name="title" value="test">
@@ -143,10 +141,72 @@
       return fragment;
     }
     function generateContextMenuDiv(array, depth = 0) { 
-      const div = document.createElement('div')
-      div.className = 'context-menu';
-      div.append(getChildren(array, depth));
-      return div;
+      const container = document.createElement('div')
+      container.className = 'context-menu';
+
+      //logic for the hover-create-div
+      const hoverDiv = document.createElement('div');
+      hoverDiv.className = 'hover-div';
+      // hoverDiv.textContent = '+';
+
+      const items = getChildren(array, depth);
+      let containerY = 0;
+      let itemsYList = [];
+      let itemsList = []; //list of all divs - excluding hr
+
+      container.onmouseenter = (event) => {
+        //preping variables to reduce calculations
+        hoverDiv.style.display = 'block';
+
+        //calculate center coordinates of all children divs
+        itemsYList = [];
+        itemsList = [];
+        Array.from(container.children).forEach((item) => {
+          if (item.tagName === 'HR') return;
+          itemsList.push(item);
+
+          const rect = item.getBoundingClientRect();
+          const itemMiddle = rect.top - container.getBoundingClientRect().top + rect.height / 2;
+          itemsYList.push(itemMiddle);
+        });
+      }
+      container.onmousemove = (event) => {
+        const mouseY = event.clientY + window.scrollY - container.getBoundingClientRect().top - window.scrollY;
+        
+        //calculate the closest div to insert the hoverDiv
+        let low = 0;
+        let high = itemsYList.length - 1;
+        while (low <= high) {
+          let mid = Math.floor((low + high) / 2);
+
+          if (itemsYList[mid] === mouseY) {
+            return mid; // Number already exists in the array
+          } else if (itemsYList[mid] < mouseY) {
+            low = mid + 1;
+          } else {
+            high = mid - 1;
+          }
+        }
+        const bestIndex = low;
+
+        //hoverDiv's onclick logic
+        //calculate the respective index from the file
+        const index = array[bestIndex]?.index ?? array[bestIndex - 1].index + 1;
+        hoverDiv.onclick = () => {
+          console.log('clicked on index:', index);
+        }
+        //append it to the best index
+        if (itemsList[bestIndex]) itemsList[bestIndex].parentNode.insertBefore(hoverDiv, itemsList[bestIndex]);
+        else container.appendChild(hoverDiv);
+      }
+
+      // Hide the hoverDiv when the mouse leaves the container
+      container.addEventListener('mouseleave', function() {
+        hoverDiv.style.display = 'none';
+      });
+
+      container.append(items);
+      return container;
     }
     function appendContextMenu(menu, depth, offset) {
       menu.style.top = offset + 'px';
