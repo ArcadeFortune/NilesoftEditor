@@ -1,9 +1,5 @@
-
-const str = '"weird string"';
-const str2 = "'weird string2'";
-
-function cleanString(str) {
-  return str.replace(/['"]/g, '');
+while(true) {
+  console.log('test');
+  break;
+  console.log('test2')
 }
-
-console.log(cleanString(str));
