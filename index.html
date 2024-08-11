@@ -65,8 +65,8 @@
       </div>
     </div>
   </div>
+  <br/>
   <div id="main">
-    <div id="div-behind-menus"></div>
   </div>
   <script>
     let menusToDelete = {};
@@ -118,7 +118,7 @@
 
           //preping for nested menus
           const newMenu = generateContextMenuDiv(element['menu'].children, depth + 1);
-          div.onclick = () => {
+          div.onclick = (event) => {
             removeContextMenus(depth);
             appendContextMenu(newMenu, depth);
             console.log(depth);
@@ -154,8 +154,13 @@
         }
       }
     }
-    document.querySelector('#div-behind-menus').onclick = () => {
-      removeContextMenus(0);
+    document.body.onclick = () => {
+      if (event.target === document.body) removeContextMenus(0);
+      //okay so every onclick event will trigger this function btw, because of propagation
+    }
+    document.querySelector('#main').onclick = (event) => {
+      if (event.target === document.querySelector('#main')) removeContextMenus(0);
+      //same here 😔
     }
   </script>
 </body>
