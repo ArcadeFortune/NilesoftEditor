@@ -5,10 +5,13 @@ body {
 }
 
 hr {
-  width: 103.2%;
+  width: 106%;
+  margin: inherit;
   margin-inline: -0.3em;
   margin-block: 0.2em;
-  border-color: #e8e8e870;
+  border: inherit;
+  border-color: #e8e8e8d1;
+  opacity: 1;
 }
 
 #main {

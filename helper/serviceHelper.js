@@ -27,9 +27,9 @@ const FILES = [
  */
 function validateInput(input, contextMenu) {
   if (!input) return
-  if (!input.section && input.section === '') return ('invalid input')
+  if (!input.section || input.section === '') return ('invalid input')
   if (contextMenu && !FILES.includes(contextMenu)) return ('Invalid file: ' + contextMenu);
-  if (input.position < 0) return ('Invalid position: ' + input.position);
+  if (!input.position || input.position < 0) return ('Invalid position: ' + input.position);
   if (!SECTIONS.includes(input.section)) return ('Invalid section: ' + input.section);
   if (!input.title) input.title = 'noTitle';
   if (!input.cmd) return ('No command specified: ' + input.cmd);
