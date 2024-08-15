@@ -1,6 +1,6 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  width: 95vw;
+  /* width: 95vw; */
   height: 95vh;
 }
 
@@ -80,4 +80,38 @@ hr {
 }
 .hover-div:hover {
   cursor: pointer;
+}
+
+/* https://codepen.io/bramus/pen/rNWByYz */
+#save {
+  position: fixed;
+  bottom: 4em;
+  right: 5em;
+  transform: translate(50%, 50%);
+
+	--angle: 0deg;
+	border: 2px solid;
+	border-image: conic-gradient(from var(--angle), red, yellow, lime, aqua, blue, magenta, red) 1;
+	animation: 10s rotate linear infinite;
+  transition: padding 0.5s;
+}
+
+#save:hover {
+  padding-block: 0.5em;
+  padding-inline: 1em;
+  border: 4px solid;
+	border-image: conic-gradient(from var(--angle), red, yellow, lime, aqua, blue, magenta, red) 1;
+	animation: 10s rotate linear infinite;
+}
+
+@keyframes rotate {
+	to {
+		--angle: 360deg;
+	}
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }

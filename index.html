@@ -6,68 +6,36 @@
   <title>Document</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="./styles.css">
+  <script src="script.js" defer></script>
+  <script src="modalScript.js" defer></script>
 </head>
 <body>
-  <h1>
-    Welcome to NilesoftEditor
-  </h1>
-  <h4>by ArcadeFortune</h4>  <form action="/taskbar" method="post" enctype="application/json">
-    <input type="number" name="position" value="23">
-    <input type="text" name="section" value="item">
-    <input type="text" name="title" value="test">
-    <input type="text" name="imagePath">
-    <input type="text" name="cmd" value="rito.bat">
-    <select name="sep">
+  <header class="d-flex align-items-center justify-content-between bg-secondary-subtle p-3 mb-5">
+    <div>
+      <h1>
+        Nilesoft<strong>Editor</strong> 
+      </h1>
+      <h4>by ArcadeFortune</h4>  
+    </div>
+    <nav>
+      <ul class="nav">
+        <a href="/taskbar" class="nav-link">Taskbar</a>
+        <!-- <a href="/startmenu" class="nav-link">Start Menu</a> -->
+        <!-- <a href="/desktop" class="nav-link">Desktop</a> -->
+      </ul>
+    </nav>
+  </header>
+    <!--TODO
+   <select name="sep">
       <option value="both">Above and Below</option>
       <option value="top">Above</option>
       <option value="bottom">Below</option>
-    </select>
-    <input type="submit" value="Upload">
-  </form>
+    </select> -->
 
-
-  <button onclick="apply()">testapply</button>
-
-
-  <br/>
-  <button onclick="getTaskbar()">Get Taskbar</button>
-  <br/>
-  <div class="context-menu">
-    <div class="element">
-      <div class="menu">
-        Nilesoft
-      </div>
-    </div>
-    <div class="element">
-      <div class="menu">
-        Apps
-      </div>
-    </div>
-    <div class="element">
-      <div class="menu">
-        Riot Games
-      </div>
-    </div>
-    <div class="element">
-      <div class="item">
-        Settings
-      </div>
-    </div>
-    <div class="element">
-      <div class="item">
-        Task Manager
-      </div>
-    </div>
-    <hr />
-    <div class="element">
-      <div class="item">
-        Exit Explorer
-      </div>
-    </div>
+  <div id="main" class="container">
   </div>
-  <br/>
-  <div id="main">
-  </div>
+  <button id="save" class="btn btn-dark" onclick="fetch('/apply')">Save</button>
+
   <!-- Modal -->
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -87,16 +55,16 @@
           </label>
 
           <label for="title">
-              Write the text to display
+            Write the text to display
             <input type="text" id="title" name="title" class="form-control" required/>
           </label>
 
           <label for="img">
             Select an icon (.ico or .exe file)
             <input type="text" id="img" name="imagePath" class="form-control" hidden/>
-              <button type="button" id="imgbtn" class="form-control text-start" onclick="getFilePath(['#img', '#imgbtn'])">
-                Select File
-              </button>
+            <button type="button" id="imgbtn" class="form-control text-start">
+              Select File
+            </button>
           </label>
 
           <label for="cmd">
@@ -109,211 +77,6 @@
       </div>
     </div>
   </div>
-<script>
-function getFilePath(selectors){
-  fetch('/selectFolder').then((res) => res.text()).then((filePath) => {
-    selectors.forEach((selector) => {
-      document.querySelector(selector).value = filePath;
-      document.querySelector(selector).innerText = filePath;
-    })
-  });
-}
-const modal = document.getElementById('staticBackdrop')
-if (modal) {
-  modal.addEventListener('show.bs.modal', event => {
-    // Button that triggered the modal
-    const button = event.relatedTarget
-    // Extract info from data-bs-* attributes
-    const index = button.getAttribute('data-bs-index')
-    const hiddenInput = modal.querySelector('#index')
-    hiddenInput.value = index
-  })
-}
-</script>
-  <script>
-    let menusToDelete = {};
-    function apply() {
-      fetch('/apply')
-    }
-    function getTaskbar() {
-      fetch('/menus/taskbar')
-      .then(res => res.json())
-      .then(data => {
-        const root = document.createElement('div')
-        root.className = 'context-menu';
-
-        data.forEach(element => {
-          if (element['menu']) {
-            const currentMenu = element['menu'];
-            //check if it is expanded
-            if (currentMenu.expanded) {
-              root.append(getChildren(currentMenu.children));
-            } else {
-              console.log('found folder:');
-              const parent = document.createElement('div');
-              parent.className = 'element';
-              const child = document.createElement('div');
-              child.className = 'menu';
-              child.innerText = currentMenu.title;
-              parent.appendChild(child);
-              root.appendChild(parent);
-            }
-          }
-        })
-        document.querySelector('#main').appendChild(root);
-      })
-    }
-
-    function getChildren(array, depth = 0) {
-      const fragment = document.createDocumentFragment();
-
-      //loop over every element
-      array.forEach(element => {
-        const div = document.createElement('div');
-        div.className = 'element';
-
-        const child = document.createElement('div');
-
-        //check if it is an item or a menu
-        var type = '';
-        if (element['item']) type = 'item';
-        else if (element['menu']) type = 'menu';
-
-        child.className = type;
-        child.innerText = element[type].title;
-
-        //menu only
-        if (element['menu']) {
-          //preping for nested menus
-          const newMenu = generateContextMenuDiv(element['menu'].children, depth + 1);
-          div.onclick = (event) => {
-            const offset = calculateElementsOffset(event.target);
-            removeContextMenus(depth);
-            appendContextMenu(newMenu, depth, offset);
-          }
-        }
-        //seperator logic
-        if (element[type].sep) {
-          const sep = document.createElement('hr');
-          fragment.appendChild(sep);
-        }
-        div.appendChild(child);
-        fragment.appendChild(div);
-        console.log(element);
-      })
-      return fragment;
-    }
-    function generateContextMenuDiv(array, depth = 0) { 
-      const container = document.createElement('div')
-      container.className = 'context-menu';
-
-      //logic for the hover-create-div
-      const hoverDiv = document.createElement('div');
-      hoverDiv.className = 'hover-div';
-      // hoverDiv.textContent = '+';
-
-      const items = getChildren(array, depth);
-      let containerY = 0;
-      let itemsYList = [];
-      let itemsList = []; //list of all divs - excluding hr
-
-      container.onmouseenter = (event) => {
-        //preping variables to reduce calculations
-        hoverDiv.style.display = 'block';
-
-        //calculate center coordinates of all children divs
-        itemsYList = [];
-        itemsList = [];
-        Array.from(container.children).forEach((item) => {
-          if (item.tagName === 'HR') return;
-          itemsList.push(item);
-
-          const rect = item.getBoundingClientRect();
-          const itemMiddle = rect.top - container.getBoundingClientRect().top + rect.height / 2;
-          itemsYList.push(itemMiddle);
-        });
-      }
-      container.onmousemove = (event) => {
-        if (event.target === event.currentTarget) return;
-        const mouseY = event.clientY + window.scrollY - container.getBoundingClientRect().top - window.scrollY;
-        
-        //calculate the closest div to insert the hoverDiv
-        let low = 0;
-        let high = itemsYList.length - 1;
-        while (low <= high) {
-          let mid = Math.floor((low + high) / 2);
-
-          if (itemsYList[mid] === mouseY) {
-            return mid; // Number already exists in the array
-          } else if (itemsYList[mid] < mouseY) {
-            low = mid + 1;
-          } else {
-            high = mid - 1;
-          }
-        }
-        const bestIndex = low;
-
-        console.log(bestIndex);
-        //hoverDiv's onclick logic
-        //calculate the respective index from the file
-        const index = array[bestIndex]?.index ?? array[bestIndex - 1].index + 1;
-        hoverDiv.onclick = () => {
-          console.log('clicked on index:', index);
-        }
-        hoverDiv.setAttribute('data-bs-toggle', 'modal');
-        hoverDiv.setAttribute('data-bs-target', '#staticBackdrop');
-        hoverDiv.setAttribute('data-bs-index', index);
-
-        //append it to the best index
-        if (itemsList[bestIndex]) itemsList[bestIndex].parentNode.insertBefore(hoverDiv, itemsList[bestIndex]);
-        else container.appendChild(hoverDiv);
-      }
-
-      // Hide the hoverDiv when the mouse leaves the container
-      container.addEventListener('mouseleave', function() {
-        hoverDiv.style.display = 'none';
-      });
-
-      container.append(items);
-      return container;
-    }
-    function appendContextMenu(menu, depth, offset) {
-      menu.style.top = offset + 'px';
-      document.querySelector('#main').appendChild(menu);
-      menusToDelete[depth] = menu;
-    }
-    function removeContextMenus(depth) {
-      while (true) {
-        if (menusToDelete[depth]) {
-          menusToDelete[depth].remove();
-          delete menusToDelete[depth];
-          depth++;
-        } else {
-          break;
-        }
-      }
-    }
-    function calculateElementsOffset(element) {
-      //go to div of class element
-      var div = element;
-      if (div.className !== 'element') div = div.parentElement;
-
-      const rawOffset = div.offsetTop;
-      //in case of margin
-      const containerOffset = div.parentElement.offsetTop;
-
-      const offset = rawOffset + containerOffset - 5; //5 is hardcoded
-      return offset;
-    }
-    document.body.onclick = () => {
-      if (event.target === document.body) removeContextMenus(0);
-      //okay so every onclick event will trigger this function btw, because of propagation
-    }
-    document.querySelector('#main').onclick = (event) => {
-      if (event.target === document.querySelector('#main')) removeContextMenus(0);
-      //same here 😔
-    }
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
