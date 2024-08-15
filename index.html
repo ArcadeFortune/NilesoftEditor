@@ -34,17 +34,17 @@
   <div class="context-menu">
     <div class="element">
       <div class="menu">
-        Nilesoft (clickable (not really))
+        Nilesoft
       </div>
     </div>
     <div class="element">
       <div class="menu">
-        Apps (clickable (not really))
+        Apps
       </div>
     </div>
     <div class="element">
       <div class="menu">
-        Riot Games (clickable (not really))
+        Riot Games
       </div>
     </div>
     <div class="element">
@@ -171,6 +171,7 @@
         });
       }
       container.onmousemove = (event) => {
+        if (event.target === event.currentTarget) return;
         const mouseY = event.clientY + window.scrollY - container.getBoundingClientRect().top - window.scrollY;
         
         //calculate the closest div to insert the hoverDiv
@@ -189,15 +190,7 @@
         }
         const bestIndex = low;
 
-        //hoverDiv's onclick logic
-        //calculate the respective index from the file
-        const index = array[bestIndex]?.index ?? array[bestIndex - 1].index + 1;
-        hoverDiv.onclick = () => {
-          console.log('clicked on index:', index);
-        }
-        //append it to the best index
-        if (itemsList[bestIndex]) itemsList[bestIndex].parentNode.insertBefore(hoverDiv, itemsList[bestIndex]);
-        else container.appendChild(hoverDiv);
+        console.log(bestIndex);
       }
 
       // Hide the hoverDiv when the mouse leaves the container

@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const service = require('./services/service');
 const { parseBody } = require('./helper/controllerHelper');
+const { getFolder } = require('./helper/getFolderHelper');
 const port = 65535;
 
 const server = http.createServer(async (req, res) => {
@@ -25,6 +26,21 @@ const server = http.createServer(async (req, res) => {
             'Location': '/'
           });
           res.end();
+          break;
+        default:
+          res.end('not found');
+      }
+      return;
+    }
+
+    if (req.url === '/getFolder') {
+      switch (req.method) {
+        case 'GET':
+          const folder = await getFolder();
+          res.writeHead(200, {
+            'Content-Type': 'application/json'
+          });
+          res.end(folder);
           break;
         default:
           res.end('not found');
